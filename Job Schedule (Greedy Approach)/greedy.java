@@ -1,4 +1,4 @@
-package job;
+package jobSequence;
 import java.util.*;
 
 class Job {
@@ -20,58 +20,68 @@ class JobSchedule{
 	int deadline;
 	double profit;
 	
-	//Accept data
 	void accept() {
-		//Enter Id..
-        while(true) {
-    		System.out.print("Enter Job Id : ");
-    		id = sc.next();
-    		sc.nextLine();
-        	if(!id.isEmpty() && id.length()<10) {
-        		break;
-        	}
-        	System.out.println("Invalid Id. Please Try again");
-			sc.next(); // clear invalid input
-        }
-        
-        //Enter deadline
-        while(true) {
-        	System.out.print("Enter Deadline for "+ id +" job : ");
-        	if(sc.hasNextInt()) {
-        	deadline = sc.nextInt();
-        	sc.nextLine();
-        		if(deadline>0 && deadline<20) {
-        			break;
-        		}
-        	System.out.println("Enter deadline between 0-20");
-        	}
-        	else {
-        	 System.out.println("Invalid Input.. Try again");
-			 sc.next(); // clear input
-        	}
-        }
-        
-        //Enter Profit
-        while(true) {
-        	System.out.print("Enter Profit made for "+id +" job : ");
-        	if(sc.hasNextDouble()) {
-        	profit = sc.nextDouble();
-        	sc.nextLine();
-        	if(profit>0 && profit<10000) {
-        		break;
-    		}
-        	System.out.println("Enter Correct Profit ");
-        }
-        	else {
-        		System.out.println("Invalid Input");
-				sc.next(); // clear invalid input
-        	}
-        }
+	    // Enter ID
+	    while (true) {
+	        System.out.print("Enter Job Id : ");
+	        id = sc.next();
 
-		//Adding it to ArrayList
-        list.add(new Job(id,deadline,profit));
+	        if (id.isEmpty() || id.length() >= 10) {
+	            System.out.println("Invalid Id. Please Try again");
+	            continue;
+	        }
+	        if (isDuplicateId(id)) {
+	            System.out.println("Id " + id + " already exists. Please try again.");
+	            continue;
+	        }
+	        break;
+	    }
+
+	    // Enter Deadline
+	    while (true) {
+	        System.out.print("Enter Deadline for " + id + " job : ");
+	        if (sc.hasNextInt()) {
+	            deadline = sc.nextInt();
+	            if (deadline > 0 && deadline < 20) {
+	                break;
+	            }
+	            System.out.println("Enter deadline between 1–20");
+	        } else {
+	            System.out.println("Invalid Input.. Try again");
+	            sc.next(); // clear invalid input
+	        }
+	    }
+
+	    // Enter Profit
+	    while (true) {
+	        System.out.print("Enter Profit made for " + id + " job : ");
+	        if (sc.hasNextDouble()) {
+	            profit = sc.nextDouble();
+	            if (profit > 0 && profit < 10000) {
+	                break;
+	            }
+	            System.out.println("Enter profit between 0–10000");
+	        } else {
+	            System.out.println("Invalid Input");
+	            sc.next(); // clear invalid input
+	        }
+	    }
+
+	    // Add new Job
+	    list.add(new Job(id, deadline, profit));
+	    System.out.println("Job " + id + " added successfully!\n");
 	}
-	
+
+	// Check duplicate ID
+	boolean isDuplicateId(String id) {
+	    for (Job jb : list) {
+	        if (jb.id.equalsIgnoreCase(id)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
 	//Displaying the list
 	void display() {
 		if(list.isEmpty()){
@@ -85,7 +95,6 @@ class JobSchedule{
 			}
 			System.out.println("\nList Successfully displayed");
 		}
-		
 	}
 
 	// method for scheduling the job
@@ -105,8 +114,8 @@ class JobSchedule{
 			}
 		}
 		//Step-3 : Creating result array
-		String[] result = new String[maxDeadLine + 1];
-		boolean[] slot = new boolean[maxDeadLine + 1];
+		String[] result = new String[maxDeadLine + 1]; // to record all the jobs
+		boolean[] slot = new boolean[maxDeadLine + 1];  // to track availability of job
 		double maxProfit = 0.00;
 		//Step-4 : Alloting slots
 		for(Job jb : list){
@@ -144,13 +153,20 @@ class greedy{
 			System.out.println("3. Schedule Job to maximize profit");
 			System.out.print("\nWhich operation to perform ? ");
 			int choice;
-			while(true) {
-				choice = sc.nextInt();
-				if(choice==1 || choice ==2 || choice==3) {
-					break;
-				}
-				System.out.println("Invalid Choice.. Try again");
+			while (true) {
+			    if (sc.hasNextInt()) {
+			        choice = sc.nextInt();
+			        if (choice == 1 || choice == 2 || choice == 3) {
+			            break;
+			        } else {
+			            System.out.println("Invalid Choice.. Try again");
+			        }
+			    } else {
+			        System.out.println("Invalid Input.. Please enter a number (1-3)");
+			        sc.next(); // clear invalid input
+			    }
 			}
+
 			switch(choice) {
 			case 1 -> {	// Creating ArrayList
 					int n;
@@ -163,6 +179,7 @@ class greedy{
 							}
 						}else{
 							System.out.println("Incorrect Count .. Please Try again");
+							sc.next();
 						}		
 					}
 					for(int i=0;i<n;i++) {
@@ -185,6 +202,7 @@ class greedy{
 				}
 				}else{
 				System.out.println("Invalid Input.. Reenter your Choice");
+				sc.next();
 				}
 			}
 		}while(k!=0);
