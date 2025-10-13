@@ -1,4 +1,4 @@
-package job;
+package jobScheduleHeap;
 import java.util.*;
 import java.util.PriorityQueue; 
 
@@ -15,7 +15,7 @@ class Job {
     }
 }
 
-public class JobSchedule { 
+public class maxHeap { 
 
     public static void schedule(ArrayList<Job> obj) {
         // Step -1 Sort in ASCE for deadline
