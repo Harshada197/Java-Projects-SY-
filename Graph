@@ -1,258 +1,220 @@
-package graph;
+package Main.java;
 import java.util.*;
-
-public class Assign {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		//Input For vertices
-		int v ;
-		while(true) {
-			System.out.println("Enter total vertices of graph");
-			if(sc.hasNextInt()) {
-				v = sc.nextInt();
-				sc.nextLine();
-				if(v>0 && v<=20) {
-					break;
-				}else {
-					System.out.println("Enter in the range (1-20) : ");
-				}
-		   }else {
-			   System.out.println("Enter Valid Input");
-			   sc.next();
-		   }	
-		}
-		int k=1;
-		do {
-		graph g = new graph(v);
-		System.out.println("======== Menu  =======");
-		System.out.println("1. Create Gragh");
-		System.out.println("2. Find the path from one station to another station");
-		System.out.println("3. Maximum Sum of BandWidth");
-		int choice;
-		while(true) {
-			System.out.println("Enter Choice: ");
-			if(sc.hasNextInt()) {
-				choice = sc.nextInt();
-				sc.nextLine();
-				if(choice>0 && choice<=3) {
-					break;
-				}else {
-					System.out.println("Enter Valid Option");
-				}
-			}else {
-				System.out.println("Enter Valid Data");
-			}
-		}
-		
-		switch(choice) {
-		
-		case 1-> g.create(); // create graph
-		
-		case 2-> {// FInd Path using dfs
-			int start ;
-			while(true) {
-				System.out.println("Enter Start vertec for DFS");
-				if(sc.hasNextInt()) {
-					start = sc.nextInt();
-					sc.nextLine();
-					if(start>0 && start<=20) {
-						break;
-					}else {
-						System.out.println("Enter in the range (1-20) : ");
-					}
-			   }else {
-				   System.out.println("Enter Valid Input");
-				   sc.next();
-			   }	
-			}
-			//ENter end vertex
-			int end ;
-			while(true) {
-				System.out.println("Enter End vertex for DFS");
-				if(sc.hasNextInt()) {
-					end = sc.nextInt();
-					sc.nextLine();
-					if(end>0 && end<=20) {
-						break;
-					}else {
-						System.out.println("Enter in the range (1-20) : ");
-					}
-			   }else {
-				   System.out.println("Enter Valid Input");
-				   sc.next();
-			   }	
-			}
-			g.dfs(start,end);
-		}
-		case 3->{// Maximum Sum of BandWidth - Prims Algorithm
-			int start ;
-			while(true) {
-				System.out.println("Enter Start vertec for Prims Algo");
-				if(sc.hasNextInt()) {
-					start = sc.nextInt();
-					sc.nextLine();
-					if(start>0 && start<=20) {
-						break;
-					}else {
-						System.out.println("Enter in the range (1-20) : ");
-					}
-			   }else {
-				   System.out.println("Enter Valid Input");
-				   sc.next();
-			   }	
-			}
-			g.prims(start);
-		}
-		}
-		
-		System.out.println("Do you want to continue? (Yes-1/No-0) ");
-		k = sc.nextInt();
-		}while(k!=0);	
-	}
-}
-
-class pair{
-	int vertex;
+//1. find path from the graph
+//2. find maximum spanning tree..
+class edge{
+	int des;
 	int wt;
-	pair(int vertex,int wt){
-		this.vertex = vertex;
+	edge(int des,int wt){
+		this.des = des;
 		this.wt = wt;
 	}
 }
+
 class graph{
-	Scanner sc = new Scanner(System.in);
+	int des;
+	int wt;
 	int v;
-	ArrayList<edge>[] adj;
-	class edge{
-		int src;
-		int des;
-		int wt;
-		edge(int src,int des,int wt){
-			this.src = src;
-			this.des = des;
-			this.wt = wt;
-		}
-	}
+	int edg;
+	boolean connect = false;
+	Scanner sc = new Scanner(System.in);
+	ArrayList<ArrayList<edge>> adj = new ArrayList<>();;
 	graph(int v){
 		this.v = v;
-		adj = new ArrayList[v];
 		for(int i=0;i<v;i++) {
-		adj[i] = new ArrayList<>();
+			adj.add(new ArrayList<>());
 		}
 	}
 	
 	void create() {
-		System.out.println("How many edges do you want to create?");
-		int n = sc.nextInt();
-		for(int i=0;i<v;i++) {
-			//Enter src
-			int src;
-			while(true) {
-				System.out.println("Enter Src: ");
-				if(sc.hasNextInt()) {
-					src = sc.nextInt();
-					sc.nextLine();
-					if(src>0 && src<=20) {
-						break;
-					}else {
-						System.out.println("Enter in the range (1-20) : ");
-					}
-			   }else {
-				   System.out.println("Enter Valid Input");
-				   sc.next();
-			   }	
+		System.out.println("========== CREATING GRAPH =========");
+		int maxEdge = v*(v-1)/2;
+		while(true) {
+			try {
+				System.out.println("Enter Number of edges you want to enter..");
+				edg = sc.nextInt();
+				if(edg>0 && edg<=maxEdge) {
+					break;
+				}else {
+					System.out.println("Edge Inout should be in range (0-"+maxEdge+")");
+				}
+			}catch(InputMismatchException e) {
+				System.out.println("Invlaid Input Try aagain");
+				sc.next();
 			}
-			
-			//Enter destination
-			int des;
-			while(true) {
-				System.out.println("Enter des: ");
-				if(sc.hasNextInt()) {
-					des = sc.nextInt();
-					sc.nextLine();
-					if(des>0 && des<=20) {
-						break;
-					}else {
-						System.out.println("Enter in the range (1-20) : ");
-					}
-			   }else {
-				   System.out.println("Enter Valid Input");
-				   sc.next();
-			   }	
-			}
-			//Enter weight
-			int wt;
-			while(true) {
-				System.out.println("Enter wt: ");
-				if(sc.hasNextInt()) {
-					wt = sc.nextInt();
-					sc.nextLine();
-					if(wt>0 && wt<=20) {
-						break;
-					}else {
-						System.out.println("Enter in the range (1-20) : ");
-					}
-			   }else {
-				   System.out.println("Enter Valid Input");
-				   sc.next();
-			   }	
-			}
-			
-			adj[src].add(new edge(src,des,wt));
-			adj[des].add(new edge(des,src,wt));
 		}
-		System.out.println("Edges Succesfully Added...!!");
-	}
-	
-	void dfs(int start,int end) {
-		boolean[] vis = new boolean[v];
-		Stack<Integer> st = new Stack<>();
-		st.add(start);
-		while(!st.isEmpty()) {
-			int curr = st.pop();
-			
-			if(vis[curr]) {
+		
+		int vtx =0;
+		while(vtx!=edg) {
+			System.out.print("\nEnter First vertex: ");
+			int x = sc.nextInt();
+			System.out.print("Enter Second vertex: ");
+			int y = sc.nextInt();
+			System.out.print("Enter Weight:");
+			int weight = sc.nextInt();
+			// check range of x and y
+			if(x<0 || x>=v || y<0 || y>=v ) {
+				System.out.println("Enter valid edges between (0-"+(maxEdge-1)+")");
 				continue;
 			}
-			
-			if(!vis[curr]) {
-				vis[curr]=true;
-				System.out.print(curr+" , ");
+			// check loop
+			if(x==y) {
+				System.out.println("No loops");
+				continue;
 			}
-			
-			if(curr == end) {
-				break;
+			// check pre-existing edges
+			boolean exist = false;
+				for(edge e : adj.get(x)) {
+					if(e.des==y) {
+						exist = true;
+						break;
+					}
+				}
+				if(exist==true) {
+					System.out.println("Edge already Exists..");
+					continue;
+				}
+				
+			adj.get(x).add(new edge(y,weight));
+			adj.get(y).add(new edge(x,weight));
+			vtx++;
+		}
+	}
+	
+	void dfsTraverseConnect() {
+		boolean[] vis = new boolean[v];
+		int cnt=0;
+		for(int i=0;i<v;i++) {
+			if(vis[i]==false) {
+				dfsConnect(vis,i);
+				cnt++;	
 			}
-			
-			for(int i=adj[curr].size()-1;i>0;i--) {
-				edge e = adj[curr].get(i);
-				if(!vis[e.des]) {
-					st.add(e.des);
+		}
+		if(cnt==1) {
+			connect = true;
+		}
+	}
+	
+	void dfsConnect(boolean[] vis,int curr) {
+		vis[curr]=true;
+		for(edge e : adj.get(curr)) {
+			if(vis[e.des]==false) {
+				dfsConnect(vis,e.des);
+			}
+		}
+		
+	}
+	
+	
+	boolean dfs(ArrayList<Integer> path,boolean[] vis, int start , int end) {
+		vis[start] = true;
+		path.add(start);
+		if(start==end) {
+			return true; // path found
+		}
+		
+		for(edge e : adj.get(start)) {
+			if(vis[e.des]==false) {
+				if(dfs(path,vis,e.des,end)==true) {
+					return true;+
 				}
 			}
 		}
+		
+		path.remove(path.size()-1);
+		return false;
 	}
 	
-	void prims(int start) {
+	void dfsTraverse() {
+		System.out.println("======== Finding  Path from graph ======");
+		System.out.print("Enter Start Vertex: ");
+		int start = sc.nextInt();
+		System.out.println("Enter Ending Vertex: ");
+		int end = sc.nextInt();
+		ArrayList<Integer> path = new ArrayList<>();
+		boolean vis[] = new boolean[v];
+		if(dfs(path,vis,start,end)==true) {
+			for(int e : path) {
+				System.out.print(e+" ");
+			}
+		}else {
+			System.out.println("Path not exists!!!");
+		}
+		
+	}
+	
+	void primsMAX() {
+		if(connect==false) {
+			System.out.println("Grapgh is not connected .. You Cannot find maxinum spanning tree..");
+			return;
+		}
+		System.out.print("Enter Starting Vertex :");
+		int start = sc.nextInt();
 		boolean[] vis = new boolean[v];
-		PriorityQueue<pair> pq= new PriorityQueue<>((a,b)-> Integer.compare(b.wt,a.wt));
-		pq.add(new pair(start,0));
-		int totalWeight=0;
+		int maxWeight=0;
+		PriorityQueue<edge> pq = new PriorityQueue<>((a,b)->Integer.compare(b.wt,a.wt));
+		ArrayList<Integer> path = new ArrayList<>();
+		pq.add(new edge(1,0));
 		while(!pq.isEmpty()) {
-			pair curr = pq.poll();
-			int u = curr.vertex;
-			if(vis[u]==true) {
+			edge curr = pq.poll();
+			int vtx = curr.des;
+			if(vis[vtx]==true) {
 				continue;
 			}else {
-				vis[u]= true;
-				totalWeight += curr.wt;
+				vis[vtx]=true;
+				maxWeight += curr.wt;
+				path.add(vtx);
 			}
-			for(edge p : adj[u]) {
-				if(!vis[p.des]) {
-					pq.add(new pair(p.des,p.wt));
+			
+			for(edge e : adj.get(vtx)) {
+				if(!vis[e.des]) {
+					pq.add(new edge(e.des,e.wt));
 				}
 			}
 		}
-		System.out.println(totalWeight);
+		for(int x : path) {
+			System.out.print(x+" ");
+		}
+		System.out.println("MaxWeight: "+maxWeight);
+	}
+	
+	void display() {
+		for(int i=0;i<v;i++) {
+			System.out.print((i)+"->");
+			for(edge ed : adj.get(i)){
+				System.out.print("("+ed.des+","+ed.wt+")");
+			}
+			System.out.println();
+		}
+	}
+}
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Creating Graph.....");
+		System.out.println("Enter the No of vertices you want in gragh");
+		int v = sc.nextInt();
+		graph g = new graph(v);
+		g.create();
+		g.dfsTraverseConnect();
+		System.out.println("Graph successfully created ..");
+		int k=1;
+		do {
+		System.out.println("====== menu =====");
+		System.out.println("1.Find Path");
+		System.out.println("2.Display Graph");
+		System.out.println("3.Find MST - prims");
+		System.out.println("4.Find MST- kruskals");
+		System.out.print("Choice: ");
+		int choice = sc.nextInt();
+		switch(choice) {
+		case 1->{g.dfsTraverse();}
+		case 2->{g.display();}
+		case 3->{g.primsMAX();}
+		}
+		System.out.println("continue? (yes=1/no=0): ");
+		k = sc.nextInt();
+		}while(k!=0);
 	}
 }
